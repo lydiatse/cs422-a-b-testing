@@ -259,8 +259,16 @@ function redraw(givenstate, pos) {
     } else {
       if (answer[j] !== null || work[j] == 0) {
         // Render an answered-number in pencil from the "answer" state.
-        $("#sn" + j).attr('class', 'sudoku-answer draggable-target').html(
-            answer[j] === null ? '&nbsp;' : handglyph(answer[j] + 1));
+        let inputId = 'in' + j
+        let inputHTML = "<input id='" + inputId + "' type=text class='sudoku-input'>"
+     
+        $("#sn" + j).attr('class', 'sudoku-answer draggable-target').html(inputHTML);
+        $("#sn" + j).prop('draggable', true);
+        $("#" + inputId).on('change', function(e) {
+          let pos = this.getAttribute('id').substr(2)
+          updateBoard(parseInt(e.target.value) - 1, pos, e)
+        })
+        $("#" + inputId).val(answer[j] === null ? '' : handglyph(answer[j] + 1))
       } else {
         // Render a grid of mini-numbers from the "work" state.
         var text = '<table class="sudoku-work-table">';
@@ -363,16 +371,16 @@ $(document).on('dblclick', 'td.sudoku-cell', function (ev) {
   }, 0);
 })
 
-$(document).on('mousedown', 'td.sudoku-cell', function(ev) {
-  ev.preventDefault();
-  hidepopups();
-});
+// $(document).on('mousedown', 'td.sudoku-cell', function(ev) {
+//   ev.preventDefault();
+//   hidepopups();
+// });
 
 // Defeats normal sudoku-cell click-handling on mouseup.
 
-$(document).on('click', 'td.sudoku-cell', function(ev) {
-  ev.stopPropagation();
-});
+// $(document).on('click', 'td.sudoku-cell', function(ev) {
+//   ev.stopPropagation();
+// });
 
 // Detects if a modifier key is pressed.
 function isalt(ev) {

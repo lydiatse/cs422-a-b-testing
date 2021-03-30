@@ -1,6 +1,7 @@
 let draggableKeys;
 let draggableTargets;
 let dragSrcEl;
+let swappable = false;
 
 function dragAndDropInit() {
   draggableKeys = document.querySelectorAll('.draggable-key')
@@ -13,6 +14,8 @@ function dragAndDropInit() {
   })
   
   draggableTargets.forEach((target) => {
+    target.addEventListener('dragstart', handleDragStart, false)
+    target.addEventListener('dragend', handleDragEnd, false)
     target.addEventListener('dragover', handleDragOver, false)
     target.addEventListener('dragenter', handleDragEnter, false)
     target.addEventListener('dragleave', handleDragLeave, false)
@@ -27,7 +30,8 @@ function handleDragStart(e) {
   dragSrcEl = this;
 
   e.dataTransfer.effectAllowed = 'move';
-  e.dataTransfer.setData('text/html', this.innerHTML);
+  // console.log(e.target.childNodes[0].value)
+  e.dataTransfer.setData('text/html', e.target.childNodes[0].value);
 }
 
 function handleDragEnd(e) {
@@ -42,12 +46,22 @@ function handleDrop(e) {
   e.stopPropagation();
 
   if (dragSrcEl !== this) {
-    this.innerHTML = e.dataTransfer.getData('text/html')
+    let inputChild = this.childNodes[0]
+    
+    // Swap values if target value exists
+    if (swappable) {
+      console.log(inputChild.value)
+      dragSrcEl.childNodes[0].value = inputChild.value
 
-    console.log(this.innerHTML)
+      let dragSrcPos = dragSrcEl.getAttribute('id').substr(2)
+      updateBoard(dragSrcEl.childNodes[0].value, dragSrcPos, e)
+
+    }
+    
+    inputChild.value = e.dataTransfer.getData('text/html')
     
     let pos = this.getAttribute('id').substr(2)
-    updateBoard(parseInt(this.innerHTML) - 1, pos, e)
+    updateBoard(parseInt(inputChild.value) - 1, pos, e)
   }
 
   return false;
@@ -60,6 +74,8 @@ function handleDragOver(e) {
 
   this.classList.add('over')
 
+  swappable = this.childNodes[0].value ? true : false;
+  console.log(swappable)
   return false;
 }
 
@@ -71,7 +87,7 @@ function handleDragLeave(e) {
   this.classList.remove('over')
 }
 
-function updateBoard(num, pos, ev) {
+function updateBoard(num, pos, ev=null) {
 
   console.log(num, pos)
   
@@ -84,7 +100,7 @@ function updateBoard(num, pos, ev) {
     state.answer[pos] = null;
     state.work[pos] = 0;
   } 
-  else if (isalt(ev)) {
+  else if (ev && isalt(ev)) {
       // Undiscoverable: write small numbers if ctrl is pressed.
       state.answer[pos] = null;
       state.work[pos] ^= (1 << num);
