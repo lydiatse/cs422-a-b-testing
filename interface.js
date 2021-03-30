@@ -227,6 +227,8 @@ function redraw(givenstate, pos) {
   var victory = victorious(state);
   var seed = state.seed;
 
+  console.log(state)
+
   // Set the title of the puzzle.
   var title = seed ? ('Puzzle #' + seed) : 'Custom Puzzle';
   $('#grade').html(title);
@@ -266,7 +268,6 @@ function redraw(givenstate, pos) {
         $("#sn" + j).prop('draggable', true);
         $("#" + inputId).on('change', function(e) {
           let pos = this.getAttribute('id').substr(2)
-
           updateBoard((e.target.value ? parseInt(e.target.value) : 0) - 1, pos, e)
         })
         $("#" + inputId).val(answer[j] === null ? '' : handglyph(answer[j] + 1))

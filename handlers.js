@@ -49,19 +49,22 @@ function handleDrop(e) {
     let inputChild = this.childNodes[0]
     
     // Swap values if target value exists
-    if (swappable) {
-      console.log(inputChild.value)
-      dragSrcEl.childNodes[0].value = inputChild.value
+    var state = currentstate();
 
-      let dragSrcPos = dragSrcEl.getAttribute('id').substr(2)
-      updateBoard(dragSrcEl.childNodes[0].value, dragSrcPos, e)
 
-    }
+    console.log(inputChild.value)
+    dragSrcEl.childNodes[0].value = swappable ? inputChild.value : ''
+
+    let dragSrcPos = dragSrcEl.getAttribute('id').substr(2)
+    console.log("src pos", dragSrcPos)
+    state.answer[dragSrcPos] = parseInt(dragSrcEl.childNodes[0].value ? dragSrcEl.childNodes[0].value : 0) - 1;
+    state.work[dragSrcPos] = 0;
     
+  
     inputChild.value = e.dataTransfer.getData('text/html')
     
     let pos = this.getAttribute('id').substr(2)
-    updateBoard(parseInt(inputChild.value) - 1, pos, e)
+    updateBoard(parseInt(inputChild.value) - 1, pos, e, state)
   }
 
   return false;
@@ -87,11 +90,11 @@ function handleDragLeave(e) {
   this.classList.remove('over')
 }
 
-function updateBoard(num, pos, ev=null) {
+function updateBoard(num, pos, ev, currstate=null) {
 
   console.log(num, pos)
   
-  var state = currentstate();
+  var state = currstate ? currstate : currentstate();
   // Ignore the click if the square is given in the puzzle.
   if (state.puzzle[pos] !== null) return;
   
@@ -100,7 +103,7 @@ function updateBoard(num, pos, ev=null) {
     state.answer[pos] = null;
     state.work[pos] = 0;
   } 
-  else if (ev && isalt(ev)) {
+  else if (isalt(ev)) {
       // Undiscoverable: write small numbers if ctrl is pressed.
       state.answer[pos] = null;
       state.work[pos] ^= (1 << num);
