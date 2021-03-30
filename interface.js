@@ -75,7 +75,7 @@ $(function() {
     showpopup('#intro');
   }
 
-  dragAndDropinit();
+  dragAndDropInit();
 });
 
 // This function generates or loads (from localStorage) puzzle #X,
@@ -282,7 +282,7 @@ function redraw(givenstate, pos) {
 
 function handglyph(text) {
   // The "1" doesn't look as one-like as the capital-I in Handlee.
-  if ('' + text === '1') { return 'I'; }
+  // if ('' + text === '1') { return 'I'; }
   return text;
 }
 
@@ -346,49 +346,22 @@ if (DISABLE_CONTEXTMENU) {
 
 // Handle sudoku cell clicks on mousedown.
 
+// Erase the square when double clicked
+$(document).on('dblclick', 'td.sudoku-cell', function (ev) {
+  let pos = parseInt($(this).attr('id').substr(2));
+  var state = currentstate();
+
+  // Erase this square.
+  state.answer[pos] = null;
+  state.work[pos] = 0;
+
+  // Immediate redraw of just the keyed cell.
+  redraw(state, pos);
+})
+
 $(document).on('mousedown', 'td.sudoku-cell', function(ev) {
   ev.preventDefault();
   hidepopups();
-  var pos = parseInt($(this).attr('id').substr(2));
-  var state = currentstate();
-  // Ignore the click if the square is given in the puzzle.
-  if (state.puzzle[pos] !== null) return;
-  // Internally we store "1" as "0".
-  var num = curnumber - 1;
-  if (num == -1) {
-    // Erase this square.
-    state.answer[pos] = null;
-    state.work[pos] = 0;
-  } else if (isalt(ev)) {
-    // Undiscoverable: write small numbers if ctrl is pressed.
-    state.answer[pos] = null;
-    state.work[pos] ^= (1 << num);
-  } else {
-    // Set the number
-    state.answer[pos] = num;
-    state.work[pos] = 0;
-    // Update elapsed time immediately, to avoid flicker upon victory.
-    if (victorious(state)) {
-      var now = (new Date).getTime();
-      if (state.gentime > starttime) {
-        starttime = state.gentime;
-      }
-      state.elapsed = (now - starttime);
-      // Log the exact moment, along with the elapsed time in ms.
-      $(document).trigger('log', ['victory', {
-        elapsed: state.elapsed,
-        seed: currentstate().seed
-      }]);
-    }
-  }
-  // Immediate redraw of just the keyed cell.
-  redraw(state, pos);
-  // Clear the current number.
-  setcurnumber(0);
-  // Commit state after a timeout
-  setTimeout(function() {
-    commitstate(state);
-  }, 0);
 });
 
 // Defeats normal sudoku-cell click-handling on mouseup.
