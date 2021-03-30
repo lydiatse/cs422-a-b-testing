@@ -266,7 +266,8 @@ function redraw(givenstate, pos) {
         $("#sn" + j).prop('draggable', true);
         $("#" + inputId).on('change', function(e) {
           let pos = this.getAttribute('id').substr(2)
-          updateBoard(parseInt(e.target.value) - 1, pos, e)
+
+          updateBoard((e.target.value ? parseInt(e.target.value) : 0) - 1, pos, e)
         })
         $("#" + inputId).val(answer[j] === null ? '' : handglyph(answer[j] + 1))
       } else {
