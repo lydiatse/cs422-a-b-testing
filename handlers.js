@@ -110,7 +110,7 @@ function updateBoard(num, pos, ev) {
   // Immediate redraw of just the keyed cell.
   redraw(state, pos);
   // Clear the current number.
-  setcurnumber(0);
+  // setcurnumber(0);
   // Commit state after a timeout
   setTimeout(function() {
     commitstate(state);

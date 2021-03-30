@@ -357,6 +357,10 @@ $(document).on('dblclick', 'td.sudoku-cell', function (ev) {
 
   // Immediate redraw of just the keyed cell.
   redraw(state, pos);
+  // Commit state after a timeout
+   setTimeout(function() {
+    commitstate(state);
+  }, 0);
 })
 
 $(document).on('mousedown', 'td.sudoku-cell', function(ev) {
@@ -371,7 +375,6 @@ $(document).on('click', 'td.sudoku-cell', function(ev) {
 });
 
 // Detects if a modifier key is pressed.
-
 function isalt(ev) {
   return (ev.which == 3) || (ev.ctrlKey) || (ev.shiftKey);
 }
