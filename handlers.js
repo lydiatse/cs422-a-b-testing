@@ -30,7 +30,6 @@ function handleDragStart(e) {
   dragSrcEl = this;
 
   e.dataTransfer.effectAllowed = 'move';
-  // console.log(e.target.childNodes[0].value)
   e.dataTransfer.setData('text/html', e.target.childNodes[0].value);
 }
 
@@ -50,17 +49,12 @@ function handleDrop(e) {
     
     // Swap values if target value exists
     var state = currentstate();
-
-
-    console.log(inputChild.value)
     dragSrcEl.childNodes[0].value = swappable ? inputChild.value : ''
-
     let dragSrcPos = dragSrcEl.getAttribute('id').substr(2)
-    console.log("src pos", dragSrcPos)
+
     state.answer[dragSrcPos] = parseInt(dragSrcEl.childNodes[0].value ? dragSrcEl.childNodes[0].value : 0) - 1;
     state.work[dragSrcPos] = 0;
     
-  
     inputChild.value = e.dataTransfer.getData('text/html')
     
     let pos = this.getAttribute('id').substr(2)
@@ -78,7 +72,6 @@ function handleDragOver(e) {
   this.classList.add('over')
 
   swappable = this.childNodes[0].value ? true : false;
-  console.log(swappable)
   return false;
 }
 
@@ -91,10 +84,8 @@ function handleDragLeave(e) {
 }
 
 function updateBoard(num, pos, ev, currstate=null) {
-
-  console.log(num, pos)
-  
   var state = currstate ? currstate : currentstate();
+
   // Ignore the click if the square is given in the puzzle.
   if (state.puzzle[pos] !== null) return;
   

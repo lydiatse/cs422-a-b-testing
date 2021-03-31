@@ -75,6 +75,7 @@ $(function() {
     showpopup('#intro');
   }
 
+
   dragAndDropInit();
 });
 
@@ -227,8 +228,6 @@ function redraw(givenstate, pos) {
   var victory = victorious(state);
   var seed = state.seed;
 
-  console.log(state)
-
   // Set the title of the puzzle.
   var title = seed ? ('Puzzle #' + seed) : 'Custom Puzzle';
   $('#grade').html(title);
@@ -262,7 +261,7 @@ function redraw(givenstate, pos) {
       if (answer[j] !== null || work[j] == 0) {
         // Render an answered-number in pencil from the "answer" state.
         let inputId = 'in' + j
-        let inputHTML = "<input id='" + inputId + "' type=text class='sudoku-input'>"
+        let inputHTML = "<input maxlength=1 onclick='this.select()' tabindex='" + (j + 1) + "' id='" + inputId + "' type='number' min='1' max='4' class='sudoku-input'>"
      
         $("#sn" + j).attr('class', 'sudoku-answer draggable-target').html(inputHTML);
         $("#sn" + j).prop('draggable', true);
@@ -756,25 +755,25 @@ function boardhtml() {
 
 // Generates HTML for the number palette from 1 to N, plus an eraser.
 
-function numberkeyhtml() {
-  var result = '<table class=numberkey>';
-  for (var j = 1; j <= Sudoku.N; ++j) {
-    result += '<tr><td class=numberkey-cell id=nk' + j + '>' +
-        '<div draggable="true" class="sudoku-answer nk draggable-key"' + j + '">' +
-          handglyph(j) + '</div></td></tr>';
-  }
-  result += '<tr><td class=numberkey-cell id=nk0>' +
-        '<div class="eraser nk0">' +
-        '&#xf12d;</div></td></tr>';
-  result += '</table>';
-  return result;
-}
+// function numberkeyhtml() {
+//   var result = '<table class=numberkey>';
+//   for (var j = 1; j <= Sudoku.N; ++j) {
+//     result += '<tr><td class=numberkey-cell id=nk' + j + '>' +
+//         '<div draggable="true" class="sudoku-answer nk draggable-key"' + j + '">' +
+//           handglyph(j) + '</div></td></tr>';
+//   }
+//   result += '<tr><td class=numberkey-cell id=nk0>' +
+//         '<div class="eraser nk0">' +
+//         '&#xf12d;</div></td></tr>';
+//   result += '</table>';
+//   return result;
+// }
 
 // Pours generated HTML into the HTML page.
 
 function setup_screen() {
   $('#centerlayout').prepend(boardhtml());
-  $('#leftlayout').prepend(numberkeyhtml());
+  // $('#leftlayout').prepend(numberkeyhtml());
 }
 
 
