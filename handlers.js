@@ -22,6 +22,51 @@ function dragAndDropInit() {
     target.addEventListener('dragend', handleDragEnd, false)
     target.addEventListener('drop', handleDrop, false)
   })
+
+  let inputAnswers = document.querySelectorAll('.input-answers')
+  console.log("input", inputAnswers)
+
+  inputAnswers.forEach((input) => {
+    // console.log('input', input)
+    // if (input.value !== '') {
+    //   input.style.cursor = 'auto';
+    // } else {
+    //   input.style.cursor = 'pointer'
+    // }
+
+    input.style.cursor = input.value !== '' ? 'move' : 'auto'
+  })
+//     input.addEventListener('input', (e) => {
+//       console.log("changed", parseInt(e.target.value))
+//       if (e.target.value && 
+//         !(parseInt(e.target.value) >= 1 &&
+//         parseInt(e.target.value) <= 4
+//         )) {
+//           e.target.value = ''
+
+//           console.log("input", e.target.id.substr(2))
+//           // let pos = parseInt($(this).attr('id').substr(2));
+//           let pos = parseInt(e.target.id.substr(2));
+//           clearInputField(pos)
+//         }
+//     })
+//   })
+// }
+}
+
+function clearInputField(pos, currstate=null) {
+  var state = currstate ? currstate : currentstate();
+
+  // Erase this square.
+  state.answer[pos] = null;
+  state.work[pos] = 0;
+
+  // Immediate redraw of just the keyed cell.
+  redraw(state, pos);
+  // Commit state after a timeout
+   setTimeout(function() {
+    commitstate(state);
+  }, 0);
 }
 
 function handleDragStart(e) {
@@ -126,3 +171,4 @@ function updateBoard(num, pos, ev, currstate=null) {
     commitstate(state);
   }, 0);
 }
+

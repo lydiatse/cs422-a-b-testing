@@ -71,9 +71,9 @@ $(function() {
   // Set the selected number to the 'eraser'.
   setcurnumber(0);
   // Show the instructions to the user
-  if (currentstate().seed == 1) {
-    showpopup('#intro');
-  }
+  // if (currentstate().seed == 1) {
+  //   showpopup('#intro');
+  // }
 
 
   dragAndDropInit();
@@ -257,11 +257,12 @@ function redraw(givenstate, pos) {
     if (puzzle[j] !== null) {
       // Render a given-number in bold from the "puzzle" state.
       $("#sn" + j).attr('class', 'sudoku-given').html(puzzle[j] + 1);
+      $("#sn" + j).prop('draggable', false);
     } else {
       if (answer[j] !== null || work[j] == 0) {
         // Render an answered-number in pencil from the "answer" state.
         let inputId = 'in' + j
-        let inputHTML = "<input maxlength=1 onclick='this.select()' tabindex='" + (j + 1) + "' id='" + inputId + "' type='number' min='1' max='4' class='sudoku-input'>"
+        let inputHTML = "<input class='input-answers' maxlength=1 onclick='this.select()' tabindex='" + (j + 1) + "' id='" + inputId + "' type='number' min='1' max='4' class='sudoku-input'>"
      
         $("#sn" + j).attr('class', 'sudoku-answer draggable-target').html(inputHTML);
         $("#sn" + j).prop('draggable', true);
@@ -285,6 +286,11 @@ function redraw(givenstate, pos) {
       }
     }
   }
+
+  let inputAnswers = document.querySelectorAll('.input-answers')
+  inputAnswers.forEach((input) => {
+    input.style.cursor = input.value !== '' ? 'move' : 'auto'
+  })
 }
 
 // Makes a handwritten number, handling a glyph substitution.
@@ -308,11 +314,11 @@ function handglyph(text) {
 
 // Clicks in the number palette.
 
-$(document).on('click', 'td.numberkey-cell', function(ev) {
-  var num = parseInt($(this).attr('id').substr(2));
-  setcurnumber(num);
-  ev.stopPropagation();
-});
+// $(document).on('click', 'td.numberkey-cell', function(ev) {
+//   var num = parseInt($(this).attr('id').substr(2));
+//   setcurnumber(num);
+//   ev.stopPropagation();
+// });
 
 // Clicks outside other regions set the number palette to 'eraser'.
 
@@ -358,18 +364,7 @@ if (DISABLE_CONTEXTMENU) {
 // Erase the square when double clicked
 $(document).on('dblclick', 'td.sudoku-cell', function (ev) {
   let pos = parseInt($(this).attr('id').substr(2));
-  var state = currentstate();
-
-  // Erase this square.
-  state.answer[pos] = null;
-  state.work[pos] = 0;
-
-  // Immediate redraw of just the keyed cell.
-  redraw(state, pos);
-  // Commit state after a timeout
-   setTimeout(function() {
-    commitstate(state);
-  }, 0);
+  clearInputField(pos)
 })
 
 // $(document).on('mousedown', 'td.sudoku-cell', function(ev) {
@@ -753,27 +748,10 @@ function boardhtml() {
   return text;
 }
 
-// Generates HTML for the number palette from 1 to N, plus an eraser.
-
-// function numberkeyhtml() {
-//   var result = '<table class=numberkey>';
-//   for (var j = 1; j <= Sudoku.N; ++j) {
-//     result += '<tr><td class=numberkey-cell id=nk' + j + '>' +
-//         '<div draggable="true" class="sudoku-answer nk draggable-key"' + j + '">' +
-//           handglyph(j) + '</div></td></tr>';
-//   }
-//   result += '<tr><td class=numberkey-cell id=nk0>' +
-//         '<div class="eraser nk0">' +
-//         '&#xf12d;</div></td></tr>';
-//   result += '</table>';
-//   return result;
-// }
-
 // Pours generated HTML into the HTML page.
-
 function setup_screen() {
-  $('#centerlayout').prepend(boardhtml());
-  // $('#leftlayout').prepend(numberkeyhtml());
+  let sudokuBoard = boardhtml()
+  document.querySelector('#sudoku-container').innerHTML = sudokuBoard
 }
 
 

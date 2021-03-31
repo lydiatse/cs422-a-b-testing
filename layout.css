@@ -79,13 +79,22 @@ input[type="button"]:hover {
 }
 
 /* Timer display */
-table.timescore {
+/* table.timescore {
   margin-top: -15px;
   border: 0;
   border-collapse: collapse;
   width: 450px;
 }
 table.timescore td {
+  font: 12pt "Open Sans";
+  font-weight: 800;
+} */
+
+.timescore {
+  margin-top: -15px;
+  border: 0;
+  border-collapse: collapse;
+  width: 450px;
   font: 12pt "Open Sans";
   font-weight: 800;
 }
@@ -141,20 +150,22 @@ div.eraser {
   color: hotpink;
 }
 table.numberkey .sudoku-answer {
-  width: 32px;
-  height: 32px;
+  width: 100%;
+  height: 100%;
   font-size: 30px;
 }
 
 /* The main sudoku table */
 table.sudoku {
   border-collapse: collapse;
+  height: 100%;
+  width: 100%;
 }
 
 /* A sudoku cell */
 td.sudoku-cell {
-  width: 46px;
-  height: 46px;
+  width: 100px;
+  height: 100px;
   text-align: center;
   vertical-align: middle;
   line-height: 0;
@@ -162,21 +173,22 @@ td.sudoku-cell {
 }
 /* A thin invisible border that becomes colored to show focus */
 div.sudoku-border {
-  width: 44px;
-  height: 44px;
+  width: 100%;
+  height: 100%;
   text-align: center;
   vertical-align: middle;
-  border: 1px solid transparent;
+  /* border: 1px solid transparent; */
   overflow: hidden;
+  text-align: center;
 }
 /* The focused state for a sudoku cell. */
-div.sudoku-border.focus {
-  border: 1px dotted blue;
-}
+/* div.sudoku-border.focus {
+  border: 3px dotted green;
+} */
 /* A written answer number */
 div.sudoku-answer {
-  width: 44px;
-  height: 44px;
+  width: 100%;
+  height: 100%;
   text-align: center;
   cursor: pointer;
   padding: 0;
@@ -187,8 +199,8 @@ div.sudoku-answer {
 }
 /* A given hint number */
 div.sudoku-given {
-  width: 48px;
-  height: 48px;
+  /* width: 48px; */
+  /* height: 48px; */
   text-align: center;
   vertical-align: middle;
   cursor: default;
@@ -269,20 +281,13 @@ div.sudoku-popup#intro {
   font-size: 14px;
 }
 
-div.draggable-key {
-  background-color: yellow;
-  cursor: move;
-}
-
 div.draggable-target.over,
 div.draggable-key.over {
   border: 3px dotted green;
 }
 
-input.sudoku-input {
-  width: 100%;
-  height: 100%;
-  font-size: 36px;
+div.draggable-target:hover {
+  border: 3px dotted green;
 }
 
 /* Chrome, Safari, Edge, Opera */
@@ -295,4 +300,23 @@ input::-webkit-inner-spin-button {
 /* Firefox */
 input[type="number"] {
   -moz-appearance: textfield;
+}
+
+.input-answers {
+  width: 100%;
+  height: 100%;
+  font-size: 48px;
+  text-align: center;
+}
+
+.game-col {
+  background-color: lightblue;
+  border-left: 3px dotted orange;
+  height: 100vh;
+}
+
+#sudoku-container {
+  height: 400px;
+  width: 400px;
+  margin: auto;
 }
