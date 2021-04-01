@@ -73,6 +73,7 @@ $(function() {
   // Show the instructions to the user
   if (currentstate().seed == 1) {
     showpopup('#intro');
+    $('#prevbutton').css({visibility: 'hidden'});
   }
 
 
@@ -368,12 +369,14 @@ function isalt(ev) {
 
 $(document).on('click', '#nextbutton', function(ev) {
   flippage(1);
+  $('#prevbutton').css({visibility: currentstate().seed == 1 ? 'hidden' : 'visible'});
 });
 
 // Handles the previous button.
 
 $(document).on('click', '#prevbutton', function(ev) {
   flippage(-1);
+  $('#prevbutton').css({visibility: currentstate().seed == 1 ? 'hidden' : 'visible'});
 });
 
 $(document).on('mousedown', '#helpbutton', function(ev) {
