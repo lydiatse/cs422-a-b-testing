@@ -287,6 +287,7 @@ function redraw(givenstate, pos) {
     }
   }
 
+  // Ensure correct cursors are used
   let inputAnswers = document.querySelectorAll('.input-answers')
   inputAnswers.forEach((input) => {
     input.style.cursor = input.value !== '' ? 'move' : 'auto'
