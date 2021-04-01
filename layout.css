@@ -281,12 +281,13 @@ div.sudoku-popup#intro {
 }
 
 div.draggable-target.over,
-div.draggable-key.over {
+div.draggable-key.over,
+div.draggable-target:hover {
   border: 3px dotted green;
 }
 
-div.draggable-target:hover {
-  border: 3px dotted green;
+.input-answers:focus {
+  border: 3px solid green;
 }
 
 /* Chrome, Safari, Edge, Opera */
@@ -309,9 +310,7 @@ input[type="number"] {
 }
 
 .game-col {
-  background-color: lightblue;
   border-left: 3px dotted orange;
-  height: 100vh;
 }
 
 #sudoku-container {

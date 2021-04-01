@@ -22,7 +22,15 @@
         </div>
       </div>
       <div class='p-3 row'>
-        <div class='col-md-3 game-col'>
+        <div class='d-flex align-items-center justify-content-center col-md-3 game-col'>
+          <div>
+          <button class="btn btn-primary" id="prevbutton">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-left" viewBox="0 0 16 16">
+              <path d="M10 12.796V3.204L4.519 8 10 12.796zm-.659.753-5.48-4.796a1 1 0 0 1 0-1.506l5.48-4.796A1 1 0 0 1 11 3.204v9.592a1 1 0 0 1-1.659.753z"/>
+            </svg>
+            Previous Puzzle
+          </button>
+        </div>
         </div>
         <div class='col-md-6 game-col'>
           <div class='d-flex flex-column justify-content-center'>
@@ -33,12 +41,47 @@
               <span class="timer">0</span>
             </div>
           <div id='sudoku-container'></div>
+          <div>
+            <button class="m-5 btn btn-primary" id="checkbutton">Check for Mistakes</button>
+          </div>
         </div>
         </div>
-        <div class='col-md-3 game-col'>
-          Column 3
+        <div class='d-flex align-items-center  justify-content-center col-md-3 game-col'>
+          <div>
+          <button class='btn btn-primary' id="nextbutton">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right" viewBox="0 0 16 16">
+              <path d="M6 12.796V3.204L11.481 8 6 12.796zm.659.753 5.48-4.796a1 1 0 0 0 0-1.506L6.66 2.451C6.011 1.885 5 2.345 5 3.204v9.592a1 1 0 0 0 1.659.753z"/>
+            </svg>
+            Next Puzzle
+          </button>
+        </div>
         </div>
       </div>
     </div>
+    <div class="fixed-bottom">
+      <div class="m-2">
+      <button class="btn btn-outline-primary" id="clearbutton">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+          <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+          <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+        </svg>
+        Reset
+      </button>
+    </div>
+    </div>
+
+    <!-- Popups -->
+    <div class="sudoku-popup" id="victory">You Win!</div>
+    <div class="sudoku-popup" id="ok">ok so far</div>
+    <div class="sudoku-popup" id="errors">mistake</div>
+    <div class="sudoku-popup" id="intro">
+    <p>In this experiment, you will solve mini Sudoku puzzles.
+    <p>The rules of Sudoku are to fill in all the digits so that no duplicates
+    appear in any row, column or bold-bordered square.
+    <p>This version of the interface uses the mouse.
+    To write a number, click on a handwritten number on the side,
+    then click on a square.  Click Next to go to the next puzle.
+    <p>Practice on puzzle #1. Then starting with puzzle #2,
+    solve as many puzzles as quickly and correctly as you can.</div>
   </body>
 </html>
