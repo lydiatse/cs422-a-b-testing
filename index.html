@@ -17,50 +17,71 @@
   <body>
     <div class='container-fluid'>
       <div class='p-3 row'>
-        <div class='col'>
+        <!-- Header row  -->
+        <div class='d-flex col justify-content-between'>
           <h1>Sudoku</h1>
+          <button id="helpbutton" class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Help">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-question-circle" viewBox="0 0 16 16">
+              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+              <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
+            </svg>
+          </button>
         </div>
       </div>
       <div class='p-3 row'>
+        <!-- First column -->
         <div class='d-flex align-items-center justify-content-center col-md-3 game-col'>
           <div>
-          <button class="btn btn-primary" id="prevbutton">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-left" viewBox="0 0 16 16">
+          <button class="btn btn-primary" id="prevbutton" type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Previous Puzzle">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-caret-left" viewBox="0 0 16 16">
               <path d="M10 12.796V3.204L4.519 8 10 12.796zm-.659.753-5.48-4.796a1 1 0 0 1 0-1.506l5.48-4.796A1 1 0 0 1 11 3.204v9.592a1 1 0 0 1-1.659.753z"/>
             </svg>
-            Previous Puzzle
           </button>
         </div>
         </div>
+
+        <!-- Sudoku Puzzle 2nd Column -->
         <div class='col-md-6 game-col'>
           <div class='d-flex flex-column justify-content-center'>
+            <!-- Puzzle title -->
             <div class="puzzlename" id="grade">&nbsp;</div>
-            <div class="timescore">
-              <span class="progress">Time</span>
-              <span class="finished">Finished in</span> 
+
+            <!-- Puzzle timer -->
+            <div class="my-2 pb-3 d-flex justify-content-center timescore">
+              <span class="timeprogress">Time:&nbsp;</span>
+              <span class="finished">Finished in&nbsp;</span> 
               <span class="timer">0</span>
             </div>
-          <div id='sudoku-container'></div>
-          <div>
-            <button class="m-5 btn btn-primary" id="checkbutton">Check for Mistakes</button>
-          </div>
+            
+            <!-- Sudoku column -->
+            <div id='sudoku-container'></div>
+          
+            <!-- Check for mistakes button -->
+            <div class="d-flex justify-content-center">
+              <button class="m-5 p-3 btn btn-primary" id="checkbutton">
+                Check for Mistakes
+              </button>
+            </div>
         </div>
         </div>
+
+        <!-- Next button in 3rd column -->
         <div class='d-flex align-items-center  justify-content-center col-md-3 game-col'>
           <div>
-          <button class='btn btn-primary' id="nextbutton">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right" viewBox="0 0 16 16">
+          <button class='btn btn-primary' id="nextbutton" type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Next Puzzle">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-caret-right" viewBox="0 0 16 16">
               <path d="M6 12.796V3.204L11.481 8 6 12.796zm.659.753 5.48-4.796a1 1 0 0 0 0-1.506L6.66 2.451C6.011 1.885 5 2.345 5 3.204v9.592a1 1 0 0 0 1.659.753z"/>
             </svg>
-            Next Puzzle
           </button>
         </div>
         </div>
       </div>
     </div>
+
+    <!-- Fixed bottom for reset button -->
     <div class="fixed-bottom">
       <div class="m-2">
-      <button class="btn btn-outline-primary" id="clearbutton">
+      <button class="p-2 btn btn-outline-danger" id="clearbutton">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
           <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
           <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
@@ -72,15 +93,19 @@
 
     <!-- Popups -->
     <div class="sudoku-popup" id="victory">You Win!</div>
-    <div class="sudoku-popup" id="ok">ok so far</div>
-    <div class="sudoku-popup" id="errors">mistake</div>
+    <div class="sudoku-popup" id="ok">Looking good so far!</div>
+    <div class="sudoku-popup" id="errors">Ooops, there are some errors</div>
     <div class="sudoku-popup" id="intro">
     <p>In this experiment, you will solve mini Sudoku puzzles.
     <p>The rules of Sudoku are to fill in all the digits so that no duplicates
     appear in any row, column or bold-bordered square.
-    <p>This version of the interface uses the mouse.
-    To write a number, click on a handwritten number on the side,
-    then click on a square.  Click Next to go to the next puzle.
+    <p>
+
+    </p>
+    <p>This version of the interface uses the keyboard and the mouse.
+    To write a number, click on the cell you'd like to change and type in your number.
+    You can also double click on the cell to erase the value.
+    You can also drag and drop numbers on the board to swap them or move their position.
     <p>Practice on puzzle #1. Then starting with puzzle #2,
     solve as many puzzles as quickly and correctly as you can.</div>
   </body>

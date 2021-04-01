@@ -71,9 +71,9 @@ $(function() {
   // Set the selected number to the 'eraser'.
   setcurnumber(0);
   // Show the instructions to the user
-  // if (currentstate().seed == 1) {
-  //   showpopup('#intro');
-  // }
+  if (currentstate().seed == 1) {
+    showpopup('#intro');
+  }
 
 
   dragAndDropInit();
@@ -239,13 +239,13 @@ function redraw(givenstate, pos) {
     $('#victory').css('display', 'none');
   }
   // Render timer UI
-  $('.progress').css('display', victory ? 'none' : 'inline');
+  $('.timeprogress').css('display', victory ? 'none' : 'inline');
   $('.finished').css('display', victory ? 'inline' : 'none');
   if (!victory) {
     $('.timer').text(formatelapsed((new Date).getTime() - starttime));
   }
   // Hide the timer for puzzle #1.
-  $('.timescore').css({visibility: state.seed == 1 && !victory
+  $('.timescore').css({visibility: state.seed == 1
                       ? 'hidden' : 'visible'});
   // If the timer should be running but it is not, get it going.
   if (!victory && !runningtime) {
@@ -262,7 +262,7 @@ function redraw(givenstate, pos) {
       if (answer[j] !== null || work[j] == 0) {
         // Render an answered-number in pencil from the "answer" state.
         let inputId = 'in' + j
-        let inputHTML = "<input class='input-answers' maxlength=1 onclick='this.select()' tabindex='" + (j + 1) + "' id='" + inputId + "' type='number' min='1' max='4' class='sudoku-input'>"
+        let inputHTML = "<input class='input-answers' maxlength=1 onclick='this.select()' tabindex='" + (j + 1) + "' id='" + inputId + "' type='text' class='sudoku-input'>"
      
         $("#sn" + j).attr('class', 'sudoku-answer draggable-target').html(inputHTML);
         $("#sn" + j).prop('draggable', true);
@@ -313,23 +313,9 @@ function handglyph(text) {
 // Read http://api.jquery.com/on/#direct-and-delegated-events
 // to understand why we are doing this.
 
-// Clicks in the number palette.
-
-// $(document).on('click', 'td.numberkey-cell', function(ev) {
-//   var num = parseInt($(this).attr('id').substr(2));
-//   setcurnumber(num);
-//   ev.stopPropagation();
-// });
-
-// Clicks outside other regions set the number palette to 'eraser'.
-
 $(document).on('click', function(ev) {
-  if (!$(ev.target).is('a,input')) {
-    setcurnumber(0);
-  }
   hidepopups();
 });
-
 
 /////////////////////////////////////////////////////////////////////////////
 // Suoku board interactions
@@ -368,17 +354,6 @@ $(document).on('dblclick', 'td.sudoku-cell', function (ev) {
   clearInputField(pos)
 })
 
-// $(document).on('mousedown', 'td.sudoku-cell', function(ev) {
-//   ev.preventDefault();
-//   hidepopups();
-// });
-
-// Defeats normal sudoku-cell click-handling on mouseup.
-
-// $(document).on('click', 'td.sudoku-cell', function(ev) {
-//   ev.stopPropagation();
-// });
-
 // Detects if a modifier key is pressed.
 function isalt(ev) {
   return (ev.which == 3) || (ev.ctrlKey) || (ev.shiftKey);
@@ -400,6 +375,11 @@ $(document).on('click', '#nextbutton', function(ev) {
 $(document).on('click', '#prevbutton', function(ev) {
   flippage(-1);
 });
+
+$(document).on('mousedown', '#helpbutton', function(ev) {
+  showpopup('#intro');
+});
+
 
 // Increments or decrements the seed, then sets up that game.
 

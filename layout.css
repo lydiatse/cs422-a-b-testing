@@ -259,8 +259,7 @@ table.sudoku-work-table div {
 /* Little popup for "ok so far", "mistake", and "You win!" */
 div.sudoku-popup {
   position: absolute;
-  height: 42px;
-  width: 220px;
+  width: 300px;
   font: 30px "Open Sans";
   font-weight: 800;
   cursor: default;
@@ -283,11 +282,11 @@ div.sudoku-popup#intro {
 div.draggable-target.over,
 div.draggable-key.over,
 div.draggable-target:hover {
-  border: 3px dotted green;
+  border: 3px dotted rgb(90, 140, 250);
 }
 
 .input-answers:focus {
-  border: 3px solid green;
+  border: 3px solid rgb(90, 140, 250);
 }
 
 /* Chrome, Safari, Edge, Opera */
@@ -309,12 +308,31 @@ input[type="number"] {
   text-align: center;
 }
 
-.game-col {
-  border-left: 3px dotted orange;
-}
-
 #sudoku-container {
   height: 400px;
   width: 400px;
   margin: auto;
+}
+
+.btn-primary {
+  background-color: rgb(70, 0, 128);
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: rgb(101, 0, 184);
+  border: none;
+}
+
+#helpbutton {
+  background-color: rgb(17, 17, 17);
+}
+
+#helpbutton:hover {
+  background-color: rgb(44, 44, 44);
+}
+
+p,
+span {
+  font-size: 16px;
 }

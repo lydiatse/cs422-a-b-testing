@@ -24,16 +24,8 @@ function dragAndDropInit() {
   })
 
   let inputAnswers = document.querySelectorAll('.input-answers')
-  console.log("input", inputAnswers)
 
   inputAnswers.forEach((input) => {
-    // console.log('input', input)
-    // if (input.value !== '') {
-    //   input.style.cursor = 'auto';
-    // } else {
-    //   input.style.cursor = 'pointer'
-    // }
-
     input.style.cursor = input.value !== '' ? 'move' : 'auto'
   })
 //     input.addEventListener('input', (e) => {
@@ -131,8 +123,22 @@ function handleDragLeave(e) {
 function updateBoard(num, pos, ev, currstate=null) {
   var state = currstate ? currstate : currentstate();
 
-  // Ignore the click if the square is given in the puzzle.
+  // Ignore the update if the square is given in the puzzle.
   if (state.puzzle[pos] !== null) return;
+
+  console.log("input is", isNaN(parseInt(ev.target.value)))
+
+  if (ev.target.value && 
+    (isNaN(parseInt(ev.target.value)) || !(parseInt(ev.target.value) >= 1 &&
+    parseInt(ev.target.value) <= 4
+    ))) 
+  {
+    ev.target.value = ''
+    let pos = parseInt(ev.target.id.substr(2));
+    clearInputField(pos)
+
+    return
+  }
   
   if (num == -1) {
     // Erase this square.
@@ -162,6 +168,7 @@ function updateBoard(num, pos, ev, currstate=null) {
       }]);
     }
   }
+
   // Immediate redraw of just the keyed cell.
   redraw(state, pos);
   // Clear the current number.
