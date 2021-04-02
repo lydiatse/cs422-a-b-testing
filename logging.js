@@ -16,13 +16,7 @@ var LOG_VERSION = 'B';             // Labels every entry with version: "B".
 
 // These event types are intercepted for logging before jQuery handlers.
 var EVENT_TYPES_TO_LOG = {
-  // mousedown: true,
-  // keydown: true, 
-  // dragend: true, 
-  // dragenter: true, 
-  // dragleave: true,
-  // dragend: true,
-  // drop: true
+  keydown: true, 
 };
 
 // These event properties are copied to the log if present.

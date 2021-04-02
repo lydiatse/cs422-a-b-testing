@@ -91,7 +91,7 @@ function setupgame(seed) {
   // Remember this is the last seed played.
   saveseed(seed);
   // If there is already a saved game for this seed, load it.
-  if (loadgame(storagename(seed))) { return; }
+  if (loadgame(storagename(seed))) { dragAndDropInit(); return; }
   // Otherwise generate one: make it quickly, and make it symmetric.
   var quick = false;
   var puzzle = Sudoku.makepuzzle(seed, quick, SYMMETRIC_PUZZLES);
@@ -106,6 +106,8 @@ function setupgame(seed) {
     elapsed: 0,
     gentime: gentime,
   });
+
+  dragAndDropInit();
 }
 
 
@@ -361,7 +363,7 @@ if (DISABLE_CONTEXTMENU) {
 $(document).on('dblclick', 'td.sudoku-cell', function (ev) {
   $(document).trigger('log', ['double clicked to clear',
   {
-   'target_id': e.target.id, 
+   'target_id': ev.target.id, 
    'time': (new Date).getTime(), 
    'board_state': currentstate()
  }]);
@@ -487,12 +489,22 @@ $(document).on('mouseup mouseleave touchend', '#checkbutton', function() {
 });
 
 // Defeat normal click handliing for the "check" button.
-
 $(document).on('click', '#checkbutton', function(ev) {
   if ($('#victory').css('display') != 'none') {
     ev.stopPropagation();
   }
 });
+
+// Log if user uses tab key
+$(document).on('keydown', function(ev) {
+  if (ev.code === 9) {
+    $(document).trigger('log', ['tabbing through cells', {
+      'time': (new Date).getTime(), 
+      'current target': ev.target.id, 
+      'board_state': currentstate()
+    }])
+  }
+})
 
 
 /////////////////////////////////////////////////////////////////////////////

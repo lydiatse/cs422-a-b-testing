@@ -122,11 +122,13 @@ function handleDragLeave(e) {
 function updateBoard(num, pos, ev, currstate=null) {
   var state = currstate ? currstate : currentstate();
 
+  console.log('num', num, 'pos', pos)
+
   // Ignore the update if the square is given in the puzzle.
   if (state.puzzle[pos] !== null) return;
 
-  if (ev.target.value && 
-    (isNaN(parseInt(ev.target.value)) || !(parseInt(ev.target.value) >= 1 &&
+  if (isNaN(parseInt(ev.target.value)) && 
+    (!(parseInt(ev.target.value) >= 1 &&
     parseInt(ev.target.value) <= 4
     ))) 
   {
@@ -134,6 +136,7 @@ function updateBoard(num, pos, ev, currstate=null) {
     let pos = parseInt(ev.target.id.substr(2));
     clearInputField(pos)
 
+    console.log("none number")
     return
   }
   
