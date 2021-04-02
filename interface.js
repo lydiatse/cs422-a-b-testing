@@ -268,6 +268,14 @@ function redraw(givenstate, pos) {
         $("#sn" + j).attr('class', 'sudoku-answer draggable-target').html(inputHTML);
         $("#sn" + j).prop('draggable', true);
         $("#" + inputId).on('change', function(e) {
+
+          $(document).trigger('log', ['changing input',
+          {
+            'target_id': e.target.id, 
+            'time': (new Date).getTime(), 
+            'value': e.target.value
+          }]);
+
           let pos = this.getAttribute('id').substr(2)
           updateBoard((e.target.value ? parseInt(e.target.value) : 0) - 1, pos, e)
         })
@@ -351,6 +359,13 @@ if (DISABLE_CONTEXTMENU) {
 
 // Erase the square when double clicked
 $(document).on('dblclick', 'td.sudoku-cell', function (ev) {
+  $(document).trigger('log', ['double clicked to clear',
+  {
+   'target_id': e.target.id, 
+   'time': (new Date).getTime(), 
+   'board_state': currentstate()
+ }]);
+
   let pos = parseInt($(this).attr('id').substr(2));
   clearInputField(pos)
 })
@@ -370,6 +385,11 @@ function isalt(ev) {
 $(document).on('click', '#nextbutton', function(ev) {
   flippage(1);
   $('#prevbutton').css({visibility: currentstate().seed == 1 ? 'hidden' : 'visible'});
+  $(document).trigger('log', ['going to next puzzle',
+  {
+    'time': (new Date).getTime(), 
+    'board_state': currentstate()
+  }]);
 });
 
 // Handles the previous button.
@@ -377,9 +397,20 @@ $(document).on('click', '#nextbutton', function(ev) {
 $(document).on('click', '#prevbutton', function(ev) {
   flippage(-1);
   $('#prevbutton').css({visibility: currentstate().seed == 1 ? 'hidden' : 'visible'});
+
+  $(document).trigger('log', ['going to previous puzzle',
+  {
+    'time': (new Date).getTime(), 
+    'board_state': currentstate()
+  }]);
 });
 
 $(document).on('mousedown', '#helpbutton', function(ev) {
+  $(document).trigger('log', ['viewing help instructions',
+  {
+    'time': (new Date).getTime(), 
+    'board_state': currentstate()
+  }]);
   showpopup('#intro');
 });
 
@@ -406,6 +437,12 @@ function flippage(skip) {
 // Clear the answers.
 
 $(document).on('click', '#clearbutton', function(ev) {
+  $(document).trigger('log', ['resetting board',
+  {
+    'time': (new Date).getTime(), 
+    'board_state': currentstate()
+  }]);
+
   hidepopups();
   var state = currentstate();
   var cleared = {puzzle: state.puzzle, seed: state.seed,
@@ -428,6 +465,13 @@ $(document).on('mousedown touchstart', '#checkbutton', function(ev) {
     // Oops - there is some mistake.
     showpopup('#errors');
   }
+
+  $(document).trigger('log', ['checking for mistakes',
+  {
+    'time': (new Date).getTime(), 
+    'board_state': currentstate()
+  }]);
+
   ev.stopPropagation();
 });
 

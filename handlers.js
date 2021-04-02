@@ -8,11 +8,6 @@ function dragAndDropInit() {
   draggableTargets = document.querySelectorAll('.draggable-target')
 
   // Add event listeners
-  draggableKeys.forEach((key) => {
-    key.addEventListener('dragstart', handleDragStart, false)
-    key.addEventListener('dragend', handleDragEnd, false)
-  })
-  
   draggableTargets.forEach((target) => {
     target.addEventListener('dragstart', handleDragStart, false)
     target.addEventListener('dragend', handleDragEnd, false)
@@ -28,22 +23,6 @@ function dragAndDropInit() {
   inputAnswers.forEach((input) => {
     input.style.cursor = input.value !== '' ? 'move' : 'auto'
   })
-//     input.addEventListener('input', (e) => {
-//       console.log("changed", parseInt(e.target.value))
-//       if (e.target.value && 
-//         !(parseInt(e.target.value) >= 1 &&
-//         parseInt(e.target.value) <= 4
-//         )) {
-//           e.target.value = ''
-
-//           console.log("input", e.target.id.substr(2))
-//           // let pos = parseInt($(this).attr('id').substr(2));
-//           let pos = parseInt(e.target.id.substr(2));
-//           clearInputField(pos)
-//         }
-//     })
-//   })
-// }
 }
 
 function clearInputField(pos, currstate=null) {
@@ -62,6 +41,13 @@ function clearInputField(pos, currstate=null) {
 }
 
 function handleDragStart(e) {
+  // Triggering log of when user started to drag item
+  $(document).trigger('log', ['dragstart', 
+  {
+    'target_id': e.target.id, 
+    'time': (new Date).getTime(), 
+    'board_state': currentstate()
+  }]);
   this.style.opacity = '0.4';
 
   dragSrcEl = this;
@@ -71,6 +57,12 @@ function handleDragStart(e) {
 }
 
 function handleDragEnd(e) {
+  $(document).trigger('log', ['drag ended',
+   {
+    'target_id': e.target.id, 
+    'time': (new Date).getTime(), 
+    'swapped': swappable 
+  }]);
   this.style.opacity = '1'
 
   draggableTargets.forEach((target) => {
@@ -79,6 +71,13 @@ function handleDragEnd(e) {
 }
 
 function handleDrop(e) {
+  $(document).trigger('log', ['element dropped',
+   {
+    'target_id': e.target.id, 
+    'time': (new Date).getTime(), 
+    'swapped': swappable, 
+    'board_state': currentstate()
+  }]);
   e.stopPropagation();
 
   if (dragSrcEl !== this) {
@@ -125,8 +124,6 @@ function updateBoard(num, pos, ev, currstate=null) {
 
   // Ignore the update if the square is given in the puzzle.
   if (state.puzzle[pos] !== null) return;
-
-  console.log("input is", isNaN(parseInt(ev.target.value)))
 
   if (ev.target.value && 
     (isNaN(parseInt(ev.target.value)) || !(parseInt(ev.target.value) >= 1 &&
