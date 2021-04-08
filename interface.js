@@ -73,7 +73,9 @@ $(function() {
   // Show the instructions to the user
   if (currentstate().seed == 1) {
     showpopup('#intro');
+    $('#prevbutton').css({visibility: 'hidden'});
   }
+
 
   dragAndDropInit();
 });
@@ -89,7 +91,7 @@ function setupgame(seed) {
   // Remember this is the last seed played.
   saveseed(seed);
   // If there is already a saved game for this seed, load it.
-  if (loadgame(storagename(seed))) { return; }
+  if (loadgame(storagename(seed))) { dragAndDropInit(); return; }
   // Otherwise generate one: make it quickly, and make it symmetric.
   var quick = false;
   var puzzle = Sudoku.makepuzzle(seed, quick, SYMMETRIC_PUZZLES);
@@ -104,6 +106,8 @@ function setupgame(seed) {
     elapsed: 0,
     gentime: gentime,
   });
+
+  dragAndDropInit();
 }
 
 
@@ -238,13 +242,13 @@ function redraw(givenstate, pos) {
     $('#victory').css('display', 'none');
   }
   // Render timer UI
-  $('.progress').css('display', victory ? 'none' : 'inline');
+  $('.timeprogress').css('display', victory ? 'none' : 'inline');
   $('.finished').css('display', victory ? 'inline' : 'none');
   if (!victory) {
     $('.timer').text(formatelapsed((new Date).getTime() - starttime));
   }
   // Hide the timer for puzzle #1.
-  $('.timescore').css({visibility: state.seed == 1 && !victory
+  $('.timescore').css({visibility: state.seed == 1
                       ? 'hidden' : 'visible'});
   // If the timer should be running but it is not, get it going.
   if (!victory && !runningtime) {
@@ -256,11 +260,28 @@ function redraw(givenstate, pos) {
     if (puzzle[j] !== null) {
       // Render a given-number in bold from the "puzzle" state.
       $("#sn" + j).attr('class', 'sudoku-given').html(puzzle[j] + 1);
+      $("#sn" + j).prop('draggable', false);
     } else {
       if (answer[j] !== null || work[j] == 0) {
         // Render an answered-number in pencil from the "answer" state.
-        $("#sn" + j).attr('class', 'sudoku-answer draggable-target').html(
-            answer[j] === null ? '&nbsp;' : handglyph(answer[j] + 1));
+        let inputId = 'in' + j
+        let inputHTML = "<input class='input-answers' maxlength=1 onclick='this.select()' tabindex='" + (j + 1) + "' id='" + inputId + "' type='text' class='sudoku-input'>"
+     
+        $("#sn" + j).attr('class', 'sudoku-answer draggable-target').html(inputHTML);
+        $("#sn" + j).prop('draggable', true);
+        $("#" + inputId).on('change', function(e) {
+
+          $(document).trigger('log', ['changing input',
+          {
+            'target_id': e.target.id, 
+            'time': (new Date).getTime(), 
+            'value': e.target.value
+          }]);
+
+          let pos = this.getAttribute('id').substr(2)
+          updateBoard((e.target.value ? parseInt(e.target.value) : 0) - 1, pos, e)
+        })
+        $("#" + inputId).val(answer[j] === null ? '' : handglyph(answer[j] + 1))
       } else {
         // Render a grid of mini-numbers from the "work" state.
         var text = '<table class="sudoku-work-table">';
@@ -276,6 +297,12 @@ function redraw(givenstate, pos) {
       }
     }
   }
+
+  // Ensure correct cursors are used
+  let inputAnswers = document.querySelectorAll('.input-answers')
+  inputAnswers.forEach((input) => {
+    input.style.cursor = input.value !== '' ? 'move' : 'auto'
+  })
 }
 
 // Makes a handwritten number, handling a glyph substitution.
@@ -297,23 +324,9 @@ function handglyph(text) {
 // Read http://api.jquery.com/on/#direct-and-delegated-events
 // to understand why we are doing this.
 
-// Clicks in the number palette.
-
-$(document).on('click', 'td.numberkey-cell', function(ev) {
-  var num = parseInt($(this).attr('id').substr(2));
-  setcurnumber(num);
-  ev.stopPropagation();
-});
-
-// Clicks outside other regions set the number palette to 'eraser'.
-
 $(document).on('click', function(ev) {
-  if (!$(ev.target).is('a,input')) {
-    setcurnumber(0);
-  }
   hidepopups();
 });
-
 
 /////////////////////////////////////////////////////////////////////////////
 // Suoku board interactions
@@ -348,31 +361,16 @@ if (DISABLE_CONTEXTMENU) {
 
 // Erase the square when double clicked
 $(document).on('dblclick', 'td.sudoku-cell', function (ev) {
+  $(document).trigger('log', ['double clicked to clear',
+  {
+   'target_id': ev.target.id, 
+   'time': (new Date).getTime(), 
+   'board_state': currentstate()
+ }]);
+
   let pos = parseInt($(this).attr('id').substr(2));
-  var state = currentstate();
-
-  // Erase this square.
-  state.answer[pos] = null;
-  state.work[pos] = 0;
-
-  // Immediate redraw of just the keyed cell.
-  redraw(state, pos);
-  // Commit state after a timeout
-   setTimeout(function() {
-    commitstate(state);
-  }, 0);
+  clearInputField(pos)
 })
-
-$(document).on('mousedown', 'td.sudoku-cell', function(ev) {
-  ev.preventDefault();
-  hidepopups();
-});
-
-// Defeats normal sudoku-cell click-handling on mouseup.
-
-$(document).on('click', 'td.sudoku-cell', function(ev) {
-  ev.stopPropagation();
-});
 
 // Detects if a modifier key is pressed.
 function isalt(ev) {
@@ -388,13 +386,36 @@ function isalt(ev) {
 
 $(document).on('click', '#nextbutton', function(ev) {
   flippage(1);
+  $('#prevbutton').css({visibility: currentstate().seed == 1 ? 'hidden' : 'visible'});
+  $(document).trigger('log', ['going to next puzzle',
+  {
+    'time': (new Date).getTime(), 
+    'board_state': currentstate()
+  }]);
 });
 
 // Handles the previous button.
 
 $(document).on('click', '#prevbutton', function(ev) {
   flippage(-1);
+  $('#prevbutton').css({visibility: currentstate().seed == 1 ? 'hidden' : 'visible'});
+
+  $(document).trigger('log', ['going to previous puzzle',
+  {
+    'time': (new Date).getTime(), 
+    'board_state': currentstate()
+  }]);
 });
+
+$(document).on('mousedown', '#helpbutton', function(ev) {
+  $(document).trigger('log', ['viewing help instructions',
+  {
+    'time': (new Date).getTime(), 
+    'board_state': currentstate()
+  }]);
+  showpopup('#intro');
+});
+
 
 // Increments or decrements the seed, then sets up that game.
 
@@ -418,6 +439,12 @@ function flippage(skip) {
 // Clear the answers.
 
 $(document).on('click', '#clearbutton', function(ev) {
+  $(document).trigger('log', ['resetting board',
+  {
+    'time': (new Date).getTime(), 
+    'board_state': currentstate()
+  }]);
+
   hidepopups();
   var state = currentstate();
   var cleared = {puzzle: state.puzzle, seed: state.seed,
@@ -440,6 +467,13 @@ $(document).on('mousedown touchstart', '#checkbutton', function(ev) {
     // Oops - there is some mistake.
     showpopup('#errors');
   }
+
+  $(document).trigger('log', ['checking for mistakes',
+  {
+    'time': (new Date).getTime(), 
+    'board_state': currentstate()
+  }]);
+
   ev.stopPropagation();
 });
 
@@ -455,12 +489,22 @@ $(document).on('mouseup mouseleave touchend', '#checkbutton', function() {
 });
 
 // Defeat normal click handliing for the "check" button.
-
 $(document).on('click', '#checkbutton', function(ev) {
   if ($('#victory').css('display') != 'none') {
     ev.stopPropagation();
   }
 });
+
+// Log if user uses tab key
+$(document).on('keydown', function(ev) {
+  if (ev.code === 9) {
+    $(document).trigger('log', ['tabbing through cells', {
+      'time': (new Date).getTime(), 
+      'current target': ev.target.id, 
+      'board_state': currentstate()
+    }])
+  }
+})
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -744,27 +788,10 @@ function boardhtml() {
   return text;
 }
 
-// Generates HTML for the number palette from 1 to N, plus an eraser.
-
-function numberkeyhtml() {
-  var result = '<table class=numberkey>';
-  for (var j = 1; j <= Sudoku.N; ++j) {
-    result += '<tr><td class=numberkey-cell id=nk' + j + '>' +
-        '<div draggable="true" class="sudoku-answer nk draggable-key"' + j + '">' +
-          handglyph(j) + '</div></td></tr>';
-  }
-  result += '<tr><td class=numberkey-cell id=nk0>' +
-        '<div class="eraser nk0">' +
-        '&#xf12d;</div></td></tr>';
-  result += '</table>';
-  return result;
-}
-
 // Pours generated HTML into the HTML page.
-
 function setup_screen() {
-  $('#centerlayout').prepend(boardhtml());
-  $('#leftlayout').prepend(numberkeyhtml());
+  let sudokuBoard = boardhtml()
+  document.querySelector('#sudoku-container').innerHTML = sudokuBoard
 }
 
 
