@@ -76,7 +76,6 @@ $(function() {
     $('#prevbutton').css({visibility: 'hidden'});
   }
 
-
   dragAndDropInit();
 });
 
@@ -430,6 +429,7 @@ function flippage(skip) {
     seed = 1;
   }
   setupgame(seed);
+  dragAndDropInit();
 }
 
 /////////////////////////////////////////////////////////////////////////////
