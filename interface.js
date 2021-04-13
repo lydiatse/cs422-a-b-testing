@@ -260,7 +260,7 @@ function redraw(givenstate, pos) {
     if (puzzle[j] !== null) {
       // Render a given-number in bold from the "puzzle" state.
       $("#sn" + j).attr('class', 'sudoku-given').html(puzzle[j] + 1);
-      $("#sn" + j).prop('draggable', false);
+      // $("#sn" + j).prop('draggable', false);
     } else {
       if (answer[j] !== null || work[j] == 0) {
         // Render an answered-number in pencil from the "answer" state.

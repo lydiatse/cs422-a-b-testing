@@ -91,7 +91,14 @@ function handleDrop(e) {
     state.answer[dragSrcPos] = parseInt(dragSrcEl.childNodes[0].value ? dragSrcEl.childNodes[0].value : 0) - 1;
     state.work[dragSrcPos] = 0;
     
-    inputChild.value = e.dataTransfer.getData('text/html')
+    let updateValue = e.dataTransfer.getData('text/html')
+
+    if (updateValue.includes("meta")) {
+      let splitVal = updateValue.split('>')
+      updateValue = splitVal[splitVal.length - 1]
+    }
+    inputChild.value = updateValue
+
     
     let pos = this.getAttribute('id').substr(2)
     updateBoard(parseInt(inputChild.value) - 1, pos, e, state)
