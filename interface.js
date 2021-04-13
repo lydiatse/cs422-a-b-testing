@@ -298,6 +298,7 @@ function redraw(givenstate, pos) {
   }
 
   // Ensure correct cursors are used
+  dragAndDropInit()
   let inputAnswers = document.querySelectorAll('.input-answers')
   inputAnswers.forEach((input) => {
     input.style.cursor = input.value !== '' ? 'move' : 'auto'
@@ -486,6 +487,7 @@ $(document).on('mouseup mouseleave touchend', '#checkbutton', function() {
   hidepopups();
   var state = currentstate();
   redraw(state);
+  dragAndDropInit()
 });
 
 // Defeat normal click handliing for the "check" button.
