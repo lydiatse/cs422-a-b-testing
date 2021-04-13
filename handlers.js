@@ -132,7 +132,7 @@ function updateBoard(num, pos, ev, currstate=null) {
   // Ignore the update if the square is given in the puzzle.
   if (state.puzzle[pos] !== null) return;
 
-  if (isNaN(parseInt(ev.target.value)) && 
+  if (isNaN(parseInt(ev.target.value)) || 
     (!(parseInt(ev.target.value) >= 1 &&
     parseInt(ev.target.value) <= 4
     ))) 
